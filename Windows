@@ -1,0 +1,78 @@
+from tkinter import *
+from tkinter import messagebox
+import openpyxl
+
+root = Tk()
+root.title('Automate ExCel Spreadsheets')
+root.configure(background='#FFDC02')
+
+# Defining functions
+def sub():
+    wb = openpyxl.load_workbook(workbook.get())
+    sheet = wb[sheet_number_form.get()]
+    for row in range(2, sheet.max_row + 1):
+        cell = sheet.cell(row, int(column_form.get()))
+        if operation_form.get() == '/':            
+            corrected_price = cell.value / float(number_form.get())
+        if operation_form.get() == '*':            
+            corrected_price = cell.value * float(number_form.get())
+        if operation_form.get() == '-':            
+            corrected_price = cell.value - float(number_form.get())
+        if operation_form.get() == '+':            
+            corrected_price = cell.value + float(number_form.get())
+        corrected_price_cell = sheet.cell(row, 3)
+        corrected_price_cell.value = corrected_price
+        
+    wb.save(workbook.get())
+    workbook.delete(0, END)
+    sheet_number_form.delete(0, END)
+    column_form.delete(0, END)
+    operation_form.delete(0, END)
+    number_form.delete(0, END)
+
+
+# Defining widgets
+workbook_lb = Label(root, text='Name of the workbook- ', pady=8, bg='#FFDC02', font=('Helveltica', 20))
+workbook = Entry(root, width=15, font=('Helveltica', 20))
+
+empty = Label(root, text='', padx=100, bg='#FFDC02', font=('Helveltica', 20))
+
+submit = Button(root, text='Do the Boring, Repetitive Tasks for me!', command=sub, padx=79, pady=10, bg='#FFDC02', font=('Helveltica', 20))
+
+sheet_number = Label(root, text='Sheet (no spaces)-', pady=8, bg='#FFDC02', font=('Helveltica', 20))
+sheet_number_form = Entry(root, width=15, font=('Helveltica', 20))
+
+column = Label(root, text='Column- ', pady=8, bg='#FFDC02', font=('Helveltica', 20))
+column_form = Entry(root, width=15, font=('Helveltica', 20))
+
+operation = Label(root, text='''Operation- ''', pady=8, bg='#FFDC02', font=('Helveltica', 20))
+operation_form = Entry(root, width=15, font=('Helveltica', 20))
+
+number = Label(root, text=f'Number', pady=8, bg='#FFDC02', font=('Helveltica', 20))
+number_form = Entry(root, width=15, font=('Helveltica', 20)) 
+
+# Packing Widgets
+
+workbook_lb.grid(row=0, column=0, sticky=W)
+workbook.grid(row=0, column=1)
+workbook.insert(string='.xlsx', index=0)
+
+sheet_number.grid(row=1, column=0, sticky=W)
+sheet_number_form.grid(row=1, column=1)
+sheet_number_form.insert(string='Sheet1', index=0)
+
+column.grid(row=2, column=0, sticky=W)
+column_form.grid(row=2, column=1)
+column_form.insert(string='2', index=0)
+
+operation.grid(row=3, column=0, sticky=W)
+operation_form.grid(row=3, column=1)
+operation_form.insert(string='*', index=0)
+
+number.grid(row=4, column=0, sticky=W)
+number_form.grid(row=4, column=1)
+
+empty.grid(row=6, column=0, columnspan=2, sticky=W)
+submit.grid(row=7, column=0, columnspan=2, sticky=W)
+
+root.mainloop()
